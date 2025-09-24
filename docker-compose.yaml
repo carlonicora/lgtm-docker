@@ -5,9 +5,9 @@ services:
     ports:
       - ${MIMIR_PORT}:9090
     restart: unless-stopped
-    command: --config.file=/etc/mimir-config.yaml
+    command: --config.file=/tmp/mimir-12345.yaml
     volumes:
-      - ./services/mimir/mimir.yaml:/etc/mimir-config.yaml
+      - ./services/mimir/mimir.yaml:/tmp/mimir-12345.yaml
       - ./services/mimir/alertmanager.yaml:/etc/alertmanager-fallback-config.yaml
 
   loki:
@@ -43,9 +43,9 @@ services:
   tempo:
     image: grafana/tempo:2.5.0
     container_name: tempo
-    command: ["-config.file=/etc/tempo-config.yaml"]
+    command: ["-config.file=/tmp/tempo-67890.yaml"]
     volumes:
-      - ./services/tempo/tempo.yaml:/etc/tempo-config.yaml
+      - ./services/tempo/tempo.yaml:/tmp/tempo-67890.yaml
 
   ## Tools
   promtail:
@@ -63,11 +63,11 @@ services:
       - ${TEMPO_GRPC_PORT}:4317 # otlp grpc
       - ${TEMPO_HTTP_PORT}:4318 # otlp http
       - ${OTEL_MONITORING_PORT}:8888 # monitoring
-    command: --config=/etc/otel-config.yaml
+    command: --config=/tmp/otel-54321.yaml
     depends_on:
       - loki
       - tempo
       - mimir
       - grafana
     volumes:
-      - ./services/otelcol/config.yaml:/etc/otel-config.yaml
+      - ./services/otelcol/config.yaml:/tmp/otel-54321.yaml
